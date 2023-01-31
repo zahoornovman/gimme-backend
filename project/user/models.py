@@ -5,8 +5,13 @@ from django.db import models
 
 
 class User(AbstractUser):
+    # field used for registration and authorization
     USERNAME_FIELD = 'email'
+
+    # required for createsuperuser script
     REQUIRED_FIELDS = ['username']
+
+    # they can be only one user with an email
     email = models.EmailField(unique=True)
 
     def str(self):
