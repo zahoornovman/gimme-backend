@@ -9,11 +9,11 @@ from want.serializers import WantSerializer
 
 
 class ListAllWants(ListAPIView):
-    queryset = Want.objects.all().order_by('-created_time')
+    queryset = Want.objects.all()
     serializer_class = WantSerializer
     permission_classes = []
 
     def get_queryset(self):
-        return Want.objects.all()
+        return Want.objects.all().order_by('-created_time')[:10]
 
 
