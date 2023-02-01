@@ -37,7 +37,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # third-party
+    'rest_framework',
+    'drf_yasg',
+    'corsheaders',
+
+    # own
+    'have',
+    'have_image',
+    'message',
+    'registration',
+    'tag',
+    'user',
+    'user_profile',
+    'want',
+    'want_image',
 ]
+
+AUTH_USER_MODEL = 'user.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
