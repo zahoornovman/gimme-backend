@@ -14,7 +14,14 @@ class ListAllWantsView(ListAPIView):
     serializer_class = WantSerializer
     permission_classes = []
 
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ['title']
+
     def get_queryset(self):
+        search = self.request.query_params.get('search')
+        if search:
+            return Want.objects.filter(title__icontains=search).order_by('-created_time')
+
         return Want.objects.all().order_by('-created_time')[:10]
 
 
@@ -35,5 +42,3 @@ class RetrieveUpdateDeleteWantView(RetrieveUpdateDestroyAPIView):
     queryset = Want.objects.all()
     serializer_class = WantSerializer
     permission_classes = [IsOwnerOrReadOnly]
-
-
