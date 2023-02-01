@@ -1,15 +1,15 @@
-from django.shortcuts import render
-from rest_framework.generics import ListAPIView, ListCreateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from user_profile.models import UserProfile
 from want.models import Want
+from want.permissions import IsOwnerOrReadOnly
 from want.serializers import WantSerializer
 
 
 # Create your views here.
 
 
-class ListAllWants(ListAPIView):
+class ListAllWantsView(ListAPIView):
     queryset = Want.objects.all()
     serializer_class = WantSerializer
     permission_classes = []
@@ -18,7 +18,7 @@ class ListAllWants(ListAPIView):
         return Want.objects.all().order_by('-created_time')[:10]
 
 
-class ListAndCreateWantsForLoggedInUser(ListCreateAPIView):
+class ListAndCreateWantsForLoggedInUserView(ListCreateAPIView):
     serializer_class = WantSerializer
 
     def perform_create(self, serializer):
@@ -28,5 +28,12 @@ class ListAndCreateWantsForLoggedInUser(ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         user_profile_of_user = UserProfile.objects.get(user=user)
-        return Want.objects.filter(author=user_profile_of_user)
+        return Want.objects.filter(author=user_profile_of_user).order_by('-created_time')
+
+
+class RetrieveUpdateDeleteWantView(RetrieveUpdateDestroyAPIView):
+    queryset = Want.objects.all()
+    serializer_class = WantSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
 
