@@ -6,4 +6,5 @@ from user_profile.models import UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = ('id', 'user', 'location')
+        read_only_fields = ['updated_time', 'created_time']

@@ -13,7 +13,7 @@ class Have(models.Model):
         USED_GOOD = 3
         USED_FAIR = 4
 
-    user_profile = models.ForeignKey(to=UserProfile, on_delete=models.CASCADE, related_name='haves')
+    author = models.ForeignKey(to=UserProfile, on_delete=models.CASCADE, related_name='haves')
     tags = models.ManyToManyField(to=Tag, related_name='haves')
     description = models.CharField(max_length=500, blank=True)
     title = models.CharField(max_length=100, blank=False)
