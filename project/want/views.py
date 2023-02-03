@@ -1,5 +1,4 @@
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
-
 from user_profile.models import UserProfile
 from want.models import Want
 from want.permissions import IsOwnerOrReadOnly

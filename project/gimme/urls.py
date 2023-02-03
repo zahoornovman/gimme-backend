@@ -24,6 +24,7 @@ urlpatterns = [
     path('backend/api/auth/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_refresh'),
     path('backend/api/wants/', include('want.urls')),
     path('backend/api/haves/', include('have.urls')),
+    path('backend/api/user/', include('user_profile.urls')),
     path('backend/api/message/', include('message.urls')),
     path('backend/api/tags/', include('tag.urls')),
 
