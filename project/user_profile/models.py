@@ -10,3 +10,6 @@ class UserProfile(models.Model):
     location = models.CharField(blank=True, max_length=30)
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'User Profile ID and email: {self.id} : {self.user}'

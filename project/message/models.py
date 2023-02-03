@@ -20,3 +20,6 @@ class Message(models.Model):
     sender_want = models.ForeignKey(to=Want, on_delete=models.CASCADE, related_name='sent_messages_for_want', null=True,
                                     blank=True)
     created_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Message sent from: {self.receiver.id} to {self.sender.id}'
