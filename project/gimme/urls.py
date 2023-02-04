@@ -17,12 +17,17 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
 
+from custom_jwt_token.views import CustomObtainPairView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('backend/api/auth/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('backend/api/auth/token/', CustomObtainPairView.as_view(), name='token_obtain_pair'),
     path('backend/api/auth/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('backend/api/auth/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_refresh'),
     path('backend/api/wants/', include('want.urls')),
     path('backend/api/haves/', include('have.urls')),
     path('backend/api/user/', include('user_profile.urls')),
+    path('backend/api/message/', include('message.urls')),
+    path('backend/api/tags/', include('tag.urls')),
+
 ]
