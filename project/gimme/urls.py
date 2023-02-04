@@ -27,6 +27,7 @@ urlpatterns = [
     path('backend/api/wants/', include('want.urls')),
     path('backend/api/want_image/', include('want_image.urls')),
     path('backend/api/haves/', include('have.urls')),
+    path('backend/api/have_image/', include('have_image.urls')),
     path('backend/api/user/', include('user_profile.urls')),
     path('backend/api/message/', include('message.urls')),
     path('backend/api/tags/', include('tag.urls')),

@@ -3,6 +3,7 @@ from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpda
 from have.models import Have
 from have.permissions import IsOwnerOrReadOnly
 from have.serializers import HaveSerializer
+from have_image.models import HaveImage
 from user_profile.models import UserProfile
 
 
@@ -25,7 +26,10 @@ class ListAndCreateHavesForLoggedInUserView(ListCreateAPIView):
 
     def perform_create(self, serializer):
         user_profile_of_user = UserProfile.objects.get(user=self.request.user)
-        serializer.save(author=user_profile_of_user)
+        images = self.request.FILES.getlist('images')
+        instance = serializer.save(author=user_profile_of_user)
+        for image in images:
+            HaveImage.objects.create(have=instance, images=image)
 
     def get_queryset(self):
         user = self.request.user
@@ -37,3 +41,12 @@ class RetrieveUpdateDeleteHaveView(RetrieveUpdateDestroyAPIView):
     queryset = Have.objects.all()
     serializer_class = HaveSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+    def perform_update(self, serializer):
+
+        serializer.save()
+        user_profile_of_user = UserProfile.objects.get(user=self.request.user)
+        images = self.request.FILES.getlist('images')
+        instance = serializer.save(author=user_profile_of_user)
+        for image in images:
+            HaveImage.objects.create(have=instance, images=image)

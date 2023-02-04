@@ -8,8 +8,6 @@ from want_image.serializers import WantImageSerializer
 class WantSerializer(serializers.ModelSerializer):
     author = UserProfileSerializer(read_only=True)
 
-    # images = WantImageSerializer(many=True, allow_null=True)
-
     class Meta:
         model = Want
         fields = (
@@ -20,7 +18,5 @@ class WantSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['images'] = WantImageSerializer(instance.images, many=True).data
-        # self.request.data.get('images')
 
         return representation
-

@@ -4,7 +4,7 @@ from have.models import Have
 
 
 def post_directory_path(instance, filename):
-    return f'{instance.want.author.id}/{filename}'
+    return f'{instance.have.author.id}/{filename}'
 
 
 # Create your models here.

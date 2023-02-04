@@ -29,8 +29,6 @@ class ListAndCreateWantsForLoggedInUserView(ListCreateAPIView):
     def perform_create(self, serializer):
         user_profile_of_user = UserProfile.objects.get(user=self.request.user)
         images = self.request.FILES.getlist('images')
-        print(images)
-        # images = self.request.data.get('images')
         instance = serializer.save(author=user_profile_of_user)
         for image in images:
             WantImage.objects.create(want=instance, images=image)
