@@ -14,11 +14,15 @@ class ListAllHavesView(ListAPIView):
     permission_classes = []
 
     def get_queryset(self):
-        search = self.request.query_params.get('search')
-        if search:
-            return Have.objects.filter(title__icontains=search).order_by('-created_time')
-
-        return Have.objects.all().order_by('-created_time')[:10]
+        title = self.request.query_params.get('title')
+        tag = self.request.query_params.get('tag')
+        if title or tag:
+            objects = Have.objects.filter(title__icontains=title) if title else Have.objects.all()
+            objects = objects.filter(tags=int(tag)) if tag else objects
+            return objects.order_by('-created_time')[:10]
+        else:
+            objects = []
+        return objects
 
 
 class ListAndCreateHavesForLoggedInUserView(ListCreateAPIView):
@@ -43,7 +47,6 @@ class RetrieveUpdateDeleteHaveView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
 
     def perform_update(self, serializer):
-
         serializer.save()
         user_profile_of_user = UserProfile.objects.get(user=self.request.user)
         images = self.request.FILES.getlist('images')

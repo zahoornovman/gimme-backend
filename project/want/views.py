@@ -16,11 +16,15 @@ class ListAllWantsView(ListAPIView):
     permission_classes = []
 
     def get_queryset(self):
-        search = self.request.query_params.get('search')
-        if search:
-            return Want.objects.filter(title__icontains=search).order_by('-created_time')
-
-        return Want.objects.all().order_by('-created_time')[:10]
+        title = self.request.query_params.get('title')
+        tag = self.request.query_params.get('tag')
+        if title or tag:
+            objects = Want.objects.filter(title__icontains=title) if title else Want.objects.all()
+            objects = objects.filter(tags=int(tag)) if tag else objects
+            return objects.order_by('-created_time')[:10]
+        else:
+            objects = []
+        return objects
 
 
 class ListAndCreateWantsForLoggedInUserView(ListCreateAPIView):
