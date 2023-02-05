@@ -1,10 +1,13 @@
 from rest_framework import serializers
-from user_profile.models import UserProfile
-from django.contrib.auth import get_user_model
+
 from user.models import User
+from user.serializers import CustomUserSerializer
+from user_profile.models import UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    user = CustomUserSerializer(read_only=True)
+
     class Meta:
         model = UserProfile
         fields = ('id', 'user', 'location')
