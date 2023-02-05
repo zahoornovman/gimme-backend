@@ -14,7 +14,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserProfileCrudSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('location', 'created_time', 'updated_time')
+        fields = ('id', 'location', 'created_time', 'updated_time')
+
+
+class UserProfilePublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ('id', 'location', 'created_time')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -35,6 +41,28 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         userprofile.location = userprofile_data.get('location', userprofile.location)
+        userprofile.id = userprofile_data.get('id', userprofile.id)
+        userprofile.save()
+
+        return instance
+
+
+class UserPublicSerializer(serializers.ModelSerializer):
+    userprofile = UserProfilePublicSerializer()
+
+    class Meta:
+        model = User
+        fields = ('username', 'userprofile')
+
+    def update(self, instance, validated_data):
+        userprofile_data = validated_data.pop('userprofile', {})
+        userprofile = instance.userprofilepublic
+
+        instance.username = validated_data.get('username', instance.username)
+        instance.save()
+
+        userprofile.location = userprofile_data.get('location', userprofile.location)
+        userprofile.id = userprofile_data.get('id', userprofile.id)
         userprofile.save()
 
         return instance
