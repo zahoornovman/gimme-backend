@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, get_object_or_404, RetrieveUpdateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, get_object_or_404, RetrieveAPIView
 from user.models import User
 from user_profile.models import UserProfile
-from user_profile.serializers import UserSerializer
+from user_profile.serializers import UserSerializer, UserPublicSerializer
 from user_profile.permissions import IsOwnerOrReadOnly
 
 
@@ -15,3 +15,9 @@ class RetrieveUpdateView(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class GetSpecificUserView(RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserPublicSerializer
+    lookup_field = 'userprofile__id'
