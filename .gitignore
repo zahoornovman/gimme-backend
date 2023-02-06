@@ -12,8 +12,8 @@ db.sqlite3
 media/
 static/
 envs/
-**/migrations/*
-!**/migrations/__init__.py
+# **/migrations/*
+# !**/migrations/__init__.py
 ### Linux ###
 *~
 
