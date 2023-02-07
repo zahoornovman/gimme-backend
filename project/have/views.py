@@ -21,7 +21,7 @@ class ListAllHavesView(ListAPIView):
             objects = objects.filter(tags=int(tag)) if tag else objects
             return objects.order_by('-created_time')[:10]
         else:
-            objects = []
+            objects = Have.objects.all().order_by('-created_time')[:10]
         return objects
 
 
