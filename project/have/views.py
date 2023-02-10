@@ -17,11 +17,11 @@ class ListAllHavesView(ListAPIView):
         title = self.request.query_params.get('title')
         tag = self.request.query_params.get('tag')
         if title or tag:
-            objects = Have.objects.filter(title__icontains=title) if title else Have.objects.all()
+            objects = Have.objects.filter(status__in=(1, 2), title__icontains=title) if title else Have.objects.all()
             objects = objects.filter(tags=int(tag)) if tag else objects
             return objects.order_by('-created_time')[:10]
         else:
-            objects = Have.objects.all().order_by('-created_time')[:10]
+            objects = Have.objects.filter(status__in=(1, 2)).order_by('-created_time')[:10]
         return objects
 
 
