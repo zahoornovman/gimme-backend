@@ -11,7 +11,7 @@ class HaveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Have
         fields = (
-            'id', 'author', 'tags', 'description', 'title', 'condition', 'wants_for_this_item', 'created_time',
+            'id', 'author', 'tags', 'description', 'title', 'condition', 'status', 'wants_for_this_item', 'created_time',
             'updated_time')
         read_only_fields = ['id', 'created_time', 'updated_time']
 
