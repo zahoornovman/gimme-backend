@@ -31,14 +31,15 @@ class ListAndCreateHavesForLoggedInUserView(ListCreateAPIView):
     def perform_create(self, serializer):
         user_profile_of_user = UserProfile.objects.get(user=self.request.user)
         images = self.request.FILES.getlist('images')
-        instance = serializer.save(author=user_profile_of_user)
+        instance = serializer.save(author=user_profile_of_user, status=1)
         for image in images:
             HaveImage.objects.create(have=instance, images=image)
 
     def get_queryset(self):
         user = self.request.user
         user_profile_of_user = UserProfile.objects.get(user=user)
-        return Have.objects.filter(author=user_profile_of_user).order_by('-created_time')
+        return Have.objects.filter(status__in=(1, 2, 3, 4), author=user_profile_of_user).order_by('status',
+                                                                                                  '-created_time')
 
 
 class RetrieveUpdateDeleteHaveView(RetrieveUpdateDestroyAPIView):
