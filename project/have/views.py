@@ -23,7 +23,7 @@ class ListAllHavesView(ListAPIView):
             return objects.order_by('-created_time')[:10]
         else:
             objects = Have.objects.filter(status__in=(1, 2)).order_by('-created_time')[:10]
-        return objects.order_by('-created_time')
+        return objects
 
 
 class ListAndCreateHavesForLoggedInUserView(ListCreateAPIView):

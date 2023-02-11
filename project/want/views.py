@@ -25,7 +25,7 @@ class ListAllWantsView(ListAPIView):
             return objects.order_by('-created_time')[:10]
         else:
             objects = Want.objects.filter(status__in=(1, 2)).order_by('-created_time')[:10]
-        return objects.order_by('-created_time')
+        return objects
 
 
 class ListAndCreateWantsForLoggedInUserView(ListCreateAPIView):
