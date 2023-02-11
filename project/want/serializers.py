@@ -11,7 +11,7 @@ class WantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Want
         fields = (
-            'id', 'author', 'tags', 'description', 'title', 'condition', 'has_for_this_item', 'created_time',
+            'id', 'author', 'tags', 'description', 'title', 'condition', 'status', 'has_for_this_item', 'created_time',
             'updated_time')
         read_only_fields = ['id', 'created_time', 'updated_time']
 

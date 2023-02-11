@@ -19,12 +19,13 @@ class ListAllWantsView(ListAPIView):
         title = self.request.query_params.get('title')
         tag = self.request.query_params.get('tag')
         if title or tag:
-            objects = Want.objects.filter(title__icontains=title) if title else Want.objects.all()
+            objects = Want.objects.filter(status__in=(1, 2), title__icontains=title) if title else Want.objects.filter(
+                status__in=(1, 2))
             objects = objects.filter(tags=int(tag)) if tag else objects
             return objects.order_by('-created_time')[:10]
         else:
-            objects = Want.objects.all().order_by('-created_time')[:10]
-        return objects
+            objects = Want.objects.filter(status__in=(1, 2)).order_by('-created_time')[:10]
+        return objects.order_by('-created_time')
 
 
 class ListAndCreateWantsForLoggedInUserView(ListCreateAPIView):
@@ -33,14 +34,15 @@ class ListAndCreateWantsForLoggedInUserView(ListCreateAPIView):
     def perform_create(self, serializer):
         user_profile_of_user = UserProfile.objects.get(user=self.request.user)
         images = self.request.FILES.getlist('images')
-        instance = serializer.save(author=user_profile_of_user)
+        instance = serializer.save(author=user_profile_of_user, status=1)
         for image in images:
             WantImage.objects.create(want=instance, images=image)
 
     def get_queryset(self):
         user = self.request.user
         user_profile_of_user = UserProfile.objects.get(user=user)
-        return Want.objects.filter(author=user_profile_of_user).order_by('-created_time')
+        return Want.objects.filter(status__in=(1, 2, 3, 4), author=user_profile_of_user).order_by('status',
+                                                                                                  '-created_time')
 
 
 class RetrieveUpdateDeleteWantView(RetrieveUpdateDestroyAPIView):
@@ -49,11 +51,9 @@ class RetrieveUpdateDeleteWantView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
 
     def perform_update(self, serializer):
-
         serializer.save()
         user_profile_of_user = UserProfile.objects.get(user=self.request.user)
         images = self.request.FILES.getlist('images')
         instance = serializer.save(author=user_profile_of_user)
         for image in images:
             WantImage.objects.create(want=instance, images=image)
-
