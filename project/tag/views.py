@@ -11,3 +11,4 @@ class ListTagsView(ListAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = []
+    pagination_class = None
