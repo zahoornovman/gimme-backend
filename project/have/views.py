@@ -28,6 +28,7 @@ class ListAllHavesView(ListAPIView):
 
 class ListAndCreateHavesForLoggedInUserView(ListCreateAPIView):
     serializer_class = HaveSerializer
+    pagination_class = None
 
     def perform_create(self, serializer):
         user_profile_of_user = UserProfile.objects.get(user=self.request.user)

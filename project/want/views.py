@@ -30,6 +30,7 @@ class ListAllWantsView(ListAPIView):
 
 class ListAndCreateWantsForLoggedInUserView(ListCreateAPIView):
     serializer_class = WantSerializer
+    pagination_class = None
 
     def perform_create(self, serializer):
         user_profile_of_user = UserProfile.objects.get(user=self.request.user)
