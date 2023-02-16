@@ -57,23 +57,10 @@ class ListCreateMessageView(GenericAPIView):
 
 
 
-
-
-            subject = f'New Barter Offer for your Request'
-
-            msg = EmailMultiAlternatives(
-                subject,
-                email_body,
-                from_email=from_email,
-                to=[to_email]
-            )
-
-            msg.mixed_subtype = 'related'
-            msg.attach_alternative(email_body, "text/html")
+            # setting up the image display in message
             img_dir = 'static'
             image = 'gimme.png'
             file_path = staticfiles_storage.path('images/gimme.png')
-            print(file_path)
             email_template = get_template('../templates/index.html')
             context = {'image_path': file_path, 'message': message_content, 'sender_email': sender_email}
             html_content = email_template.render(context)
@@ -82,9 +69,7 @@ class ListCreateMessageView(GenericAPIView):
                 img.add_header('Content-ID', '<{name}>'.format(name=image))
                 img.add_header('Content-Disposition', 'inline', filename=image)
 
-            msg.attach(img)
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
+
             # image_path = staticfiles_storage.path('images/gimme.png')
             #
             # with open(image_path, 'rb') as f:
@@ -99,47 +84,87 @@ class ListCreateMessageView(GenericAPIView):
             # email_template = get_template('../templates/index.html')
             # context = {'image_path': image_path, 'message': message_content, 'sender_email': sender_email}
             # html_content = email_template.render(context)
-            # if receiver_have:
-            #     subject = f'New Barter Request for your Offer: {receiver_have.title}'
-            #     msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
-            #     msg.attach('gimme.png', image_data, 'image/png')
-            #     # msg.attach(basename(image_path), image_data, 'image/png')
-            #     msg.attach_alternative(html_content, "text/html")
-            #     print(image_path)
-            #     msg.send()
-            #     # send_mail(
-            #     #     subject,
-            #     #     f'{email_body}',
-            #     #     from_email,
-            #     #     [receiver_email],
-            #     #     fail_silently=False,
-            #     # )
-            # elif receiver_want:
-            #     subject = f'New Barter Offer for your Request: {receiver_want.title}'
-            #     msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
-            #     msg.attach(basename(image_path), image_data, 'image/png')
-            #     msg.attach_alternative(html_content, "text/html")
-            #     msg.send()
-            #     # send_mail(
-            #     #     subject,
-            #     #     f'{email_body}',
-            #     #     from_email,
-            #     #     [receiver_email],
-            #     #     fail_silently=False,
-            #     # )
-            # else:
-            #     subject = f'New Barter Request'
-            #     msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
-            #     msg.attach(basename(image_path), image_data, 'image/png')
-            #     msg.attach_alternative(html_content, "text/html")
-            #     msg.send()
-            #     # send_mail(
-            #     #     subject,
-            #     #     f'{email_body}',
-            #     #     from_email,
-            #     #     [receiver_email],
-            #     #     fail_silently=False,
-            #     # )
+            if receiver_have:
+                subject = f'New Barter Request for your Offer: {receiver_have.title}'
+
+                msg = EmailMultiAlternatives(
+                    subject,
+                    email_body,
+                    from_email=from_email,
+                    to=[to_email]
+                )
+
+                msg.mixed_subtype = 'related'
+                # msg.attach_alternative(email_body, "text/html")
+                msg.attach(img)
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+
+                # msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
+                # msg.attach('gimme.png', image_data, 'image/png')
+                # # msg.attach(basename(image_path), image_data, 'image/png')
+                # msg.attach_alternative(html_content, "text/html")
+                # print(image_path)
+                # msg.send()
+                # send_mail(
+                #     subject,
+                #     f'{email_body}',
+                #     from_email,
+                #     [receiver_email],
+                #     fail_silently=False,
+                # )
+            elif receiver_want:
+                subject = f'New Barter Offer for your Request: {receiver_want.title}'
+                msg = EmailMultiAlternatives(
+                    subject,
+                    email_body,
+                    from_email=from_email,
+                    to=[to_email]
+                )
+
+                msg.mixed_subtype = 'related'
+                # msg.attach_alternative(email_body, "text/html")
+                msg.attach(img)
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+                # msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
+                # msg.attach(basename(image_path), image_data, 'image/png')
+                # msg.attach_alternative(html_content, "text/html")
+                # msg.send()
+                # send_mail(
+                #     subject,
+                #     f'{email_body}',
+                #     from_email,
+                #     [receiver_email],
+                #     fail_silently=False,
+                # )
+            else:
+                subject = f'New Barter Request'
+
+                msg = EmailMultiAlternatives(
+                    subject,
+                    email_body,
+                    from_email=from_email,
+                    to=[to_email]
+                )
+
+                msg.mixed_subtype = 'related'
+                # msg.attach_alternative(email_body, "text/html")
+
+                msg.attach(img)
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+                # msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
+                # msg.attach(basename(image_path), image_data, 'image/png')
+                # msg.attach_alternative(html_content, "text/html")
+                # msg.send()
+                # send_mail(
+                #     subject,
+                #     f'{email_body}',
+                #     from_email,
+                #     [receiver_email],
+                #     fail_silently=False,
+                # )
 
             serializer.save(sender_have=sender_have, sender_want=sender_want, receiver_have=receiver_have,
                             receiver_want=receiver_want, receiver=receiver, sender=user_profile_of_user)

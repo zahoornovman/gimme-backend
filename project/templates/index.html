@@ -3,15 +3,23 @@
 
 <html>
 <head>
+    <style>
+h1   {color: #FFA800;}
+h2  {color: #FFA800;}
+img {height:10rem; width: 13rem}
+</style>
 </head>
 <body>
-<h2>
-    {% load static %} <img src='cid:gimme.png' alt="Example image">
-</h2>
-<div>{{ message }}</div>
+<h1> Someone showed interest in your Post!</h1>
+
+<h2> Here is the message they sent you: </h2>
+<div> <p>{{ message }}</p></div>
 <br>
+<div> <h3> If you are interested please email to this address:  {{ sender_email }} </h3> </div>
 <br>
-<div> If interested please email to this address: {{ sender_email }}</div>
+<div> Have fun bartering! </div>
+
+ {% load static %} <img src='cid:gimme.png' alt="Example image">
 
 </body>
 </html>
