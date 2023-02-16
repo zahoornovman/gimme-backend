@@ -1,4 +1,8 @@
 from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.template import Context
+from django.conf import settings
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, GenericAPIView
 from rest_framework.response import Response
@@ -43,28 +47,31 @@ class ListCreateMessageView(GenericAPIView):
             receiver_email = receiver_user_object.email
             message_content = self.request.data['content']
             email_body = f'{message_content} \n Please email to this address if you are interested: {sender_email}'
-
+            to_email=settings.EMAIL_HOST_USER
             if receiver_have:
+                subject = f'New Barter Request for your Have: {receiver_have.title}'
                 send_mail(
-                    f'New Barter Request for your Have: {receiver_have.title}',
+                    subject,
                     f'{email_body}',
-                    'gimme.switzerland@gmail.com',
+                    to_email,
                     [receiver_email],
                     fail_silently=False,
                 )
             elif receiver_want:
+                subject = f'New Barter Request for your Want: {receiver_want.title}'
                 send_mail(
-                    f'New Barter Request for your Want: {receiver_want.title}',
+                    subject,
                     f'{email_body}',
-                    'gimme.switzerland@gmail.com',
+                    to_email,
                     [receiver_email],
                     fail_silently=False,
                 )
             else:
+                subject = f'New Barter Request'
                 send_mail(
-                    f'New Barter Request',
+                    subject,
                     f'{email_body}',
-                    'gimme.switzerland@gmail.com',
+                    to_email,
                     [receiver_email],
                     fail_silently=False,
                 )
