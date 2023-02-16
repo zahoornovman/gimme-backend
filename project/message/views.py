@@ -1,10 +1,14 @@
-from django.core.mail import send_mail
+import os
+from email.mime.image import MIMEImage
+from os.path import basename
+
+from django.conf import settings
+from django.core.files.base import ContentFile
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
-from django.template import Context
-from django.conf import settings
+
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, GenericAPIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 from have.models import Have
@@ -13,10 +17,10 @@ from message.serializers import MessageSerializer
 from user_profile.models import UserProfile, User
 from want.models import Want
 
+from django.contrib.staticfiles.storage import staticfiles_storage
+
 
 # Create your views here.
-
-
 class ListCreateMessageView(GenericAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
@@ -44,41 +48,101 @@ class ListCreateMessageView(GenericAPIView):
 
             sender_email = self.request.user
             receiver_user_object = User.objects.get(id=receiver.user_id)
-            receiver_email = receiver_user_object.email
+
             message_content = self.request.data['content']
-            email_body = f'{message_content} \n Please email to this address if you are interested: {sender_email}'
-            to_email=settings.EMAIL_HOST_USER
-            if receiver_have:
-                subject = f'New Barter Request for your Have: {receiver_have.title}'
-                send_mail(
-                    subject,
-                    f'{email_body}',
-                    to_email,
-                    [receiver_email],
-                    fail_silently=False,
-                )
-            elif receiver_want:
-                subject = f'New Barter Request for your Want: {receiver_want.title}'
-                send_mail(
-                    subject,
-                    f'{email_body}',
-                    to_email,
-                    [receiver_email],
-                    fail_silently=False,
-                )
-            else:
-                subject = f'New Barter Request'
-                send_mail(
-                    subject,
-                    f'{email_body}',
-                    to_email,
-                    [receiver_email],
-                    fail_silently=False,
-                )
+            email_body = f'{message_content} \n If interested please send an email to this address: {sender_email}'
+            from_email = settings.EMAIL_HOST_USER
+            to_email = receiver_user_object.email
+
+
+
+
+
+
+            subject = f'New Barter Offer for your Request'
+
+            msg = EmailMultiAlternatives(
+                subject,
+                email_body,
+                from_email=from_email,
+                to=[to_email]
+            )
+
+            msg.mixed_subtype = 'related'
+            msg.attach_alternative(email_body, "text/html")
+            img_dir = 'static'
+            image = 'gimme.png'
+            file_path = staticfiles_storage.path('images/gimme.png')
+            print(file_path)
+            email_template = get_template('../templates/index.html')
+            context = {'image_path': file_path, 'message': message_content, 'sender_email': sender_email}
+            html_content = email_template.render(context)
+            with open(file_path, 'rb') as f:
+                img = MIMEImage(f.read())
+                img.add_header('Content-ID', '<{name}>'.format(name=image))
+                img.add_header('Content-Disposition', 'inline', filename=image)
+
+            msg.attach(img)
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            # image_path = staticfiles_storage.path('images/gimme.png')
+            #
+            # with open(image_path, 'rb') as f:
+            #     image_data = f.read()
+            #     # image_data = MIMEImage(f.read())
+            #
+            #     image_data.add_header('Content-ID', '<{}>'.format(f))
+            #
+            # image_file = ContentFile(image_data)
+            # image_cid = 'gimme.png'
+            #
+            # email_template = get_template('../templates/index.html')
+            # context = {'image_path': image_path, 'message': message_content, 'sender_email': sender_email}
+            # html_content = email_template.render(context)
+            # if receiver_have:
+            #     subject = f'New Barter Request for your Offer: {receiver_have.title}'
+            #     msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
+            #     msg.attach('gimme.png', image_data, 'image/png')
+            #     # msg.attach(basename(image_path), image_data, 'image/png')
+            #     msg.attach_alternative(html_content, "text/html")
+            #     print(image_path)
+            #     msg.send()
+            #     # send_mail(
+            #     #     subject,
+            #     #     f'{email_body}',
+            #     #     from_email,
+            #     #     [receiver_email],
+            #     #     fail_silently=False,
+            #     # )
+            # elif receiver_want:
+            #     subject = f'New Barter Offer for your Request: {receiver_want.title}'
+            #     msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
+            #     msg.attach(basename(image_path), image_data, 'image/png')
+            #     msg.attach_alternative(html_content, "text/html")
+            #     msg.send()
+            #     # send_mail(
+            #     #     subject,
+            #     #     f'{email_body}',
+            #     #     from_email,
+            #     #     [receiver_email],
+            #     #     fail_silently=False,
+            #     # )
+            # else:
+            #     subject = f'New Barter Request'
+            #     msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
+            #     msg.attach(basename(image_path), image_data, 'image/png')
+            #     msg.attach_alternative(html_content, "text/html")
+            #     msg.send()
+            #     # send_mail(
+            #     #     subject,
+            #     #     f'{email_body}',
+            #     #     from_email,
+            #     #     [receiver_email],
+            #     #     fail_silently=False,
+            #     # )
 
             serializer.save(sender_have=sender_have, sender_want=sender_want, receiver_have=receiver_have,
                             receiver_want=receiver_want, receiver=receiver, sender=user_profile_of_user)
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
