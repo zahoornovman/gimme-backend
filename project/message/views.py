@@ -25,6 +25,7 @@ class ListCreateMessageView(GenericAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
+    # Sending emails
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -54,9 +55,6 @@ class ListCreateMessageView(GenericAPIView):
             from_email = settings.EMAIL_HOST_USER
             to_email = receiver_user_object.email
 
-
-
-
             # setting up the image display in message
             img_dir = 'static'
             image = 'gimme.png'
@@ -69,21 +67,6 @@ class ListCreateMessageView(GenericAPIView):
                 img.add_header('Content-ID', '<{name}>'.format(name=image))
                 img.add_header('Content-Disposition', 'inline', filename=image)
 
-
-            # image_path = staticfiles_storage.path('images/gimme.png')
-            #
-            # with open(image_path, 'rb') as f:
-            #     image_data = f.read()
-            #     # image_data = MIMEImage(f.read())
-            #
-            #     image_data.add_header('Content-ID', '<{}>'.format(f))
-            #
-            # image_file = ContentFile(image_data)
-            # image_cid = 'gimme.png'
-            #
-            # email_template = get_template('../templates/index.html')
-            # context = {'image_path': image_path, 'message': message_content, 'sender_email': sender_email}
-            # html_content = email_template.render(context)
             if receiver_have:
                 subject = f'New Barter Request for your Offer: {receiver_have.title}'
 
@@ -95,24 +78,10 @@ class ListCreateMessageView(GenericAPIView):
                 )
 
                 msg.mixed_subtype = 'related'
-                # msg.attach_alternative(email_body, "text/html")
                 msg.attach(img)
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()
 
-                # msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
-                # msg.attach('gimme.png', image_data, 'image/png')
-                # # msg.attach(basename(image_path), image_data, 'image/png')
-                # msg.attach_alternative(html_content, "text/html")
-                # print(image_path)
-                # msg.send()
-                # send_mail(
-                #     subject,
-                #     f'{email_body}',
-                #     from_email,
-                #     [receiver_email],
-                #     fail_silently=False,
-                # )
             elif receiver_want:
                 subject = f'New Barter Offer for your Request: {receiver_want.title}'
                 msg = EmailMultiAlternatives(
@@ -123,21 +92,9 @@ class ListCreateMessageView(GenericAPIView):
                 )
 
                 msg.mixed_subtype = 'related'
-                # msg.attach_alternative(email_body, "text/html")
                 msg.attach(img)
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()
-                # msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
-                # msg.attach(basename(image_path), image_data, 'image/png')
-                # msg.attach_alternative(html_content, "text/html")
-                # msg.send()
-                # send_mail(
-                #     subject,
-                #     f'{email_body}',
-                #     from_email,
-                #     [receiver_email],
-                #     fail_silently=False,
-                # )
             else:
                 subject = f'New Barter Request'
 
@@ -149,22 +106,10 @@ class ListCreateMessageView(GenericAPIView):
                 )
 
                 msg.mixed_subtype = 'related'
-                # msg.attach_alternative(email_body, "text/html")
 
                 msg.attach(img)
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()
-                # msg = EmailMultiAlternatives(subject, email_body, from_email, [to_email])
-                # msg.attach(basename(image_path), image_data, 'image/png')
-                # msg.attach_alternative(html_content, "text/html")
-                # msg.send()
-                # send_mail(
-                #     subject,
-                #     f'{email_body}',
-                #     from_email,
-                #     [receiver_email],
-                #     fail_silently=False,
-                # )
 
             serializer.save(sender_have=sender_have, sender_want=sender_want, receiver_have=receiver_have,
                             receiver_want=receiver_want, receiver=receiver, sender=user_profile_of_user)

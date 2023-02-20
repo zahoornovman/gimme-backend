@@ -5,7 +5,7 @@ from have_image.permissions import IsOwnerOrReadOnly
 from have_image.serializers import HaveImageSerializer
 
 
-# Create your views here.
+# Deleting image
 class HaveImageDeleteView(RetrieveUpdateDestroyAPIView):
     queryset = HaveImage.objects.all()
     serializer_class = HaveImageSerializer

@@ -7,7 +7,7 @@ from have_image.models import HaveImage
 from user_profile.models import UserProfile
 
 
-# Create your views here.
+# List all have/Offers. no login needed
 class ListAllHavesView(ListAPIView):
     queryset = Have.objects.all()
     serializer_class = HaveSerializer
@@ -26,6 +26,7 @@ class ListAllHavesView(ListAPIView):
         return objects
 
 
+# Logged in user call for list and create new haves/Offers
 class ListAndCreateHavesForLoggedInUserView(ListCreateAPIView):
     serializer_class = HaveSerializer
     pagination_class = None
@@ -44,6 +45,7 @@ class ListAndCreateHavesForLoggedInUserView(ListCreateAPIView):
                                                                                                   '-created_time')
 
 
+# Update delete have/Offer by logged in user
 class RetrieveUpdateDeleteHaveView(RetrieveUpdateDestroyAPIView):
     queryset = Have.objects.all()
     serializer_class = HaveSerializer
