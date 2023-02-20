@@ -30,7 +30,7 @@ SERVER_TYPE = os.environ.get('SERVER_TYPE', 'development')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['https://gimme-backend.herokuapp.com/']
+ALLOWED_HOSTS = ['gimme-backend.herokuapp.com']
 
 if SERVER_TYPE != 'production':
     ALLOWED_HOSTS += ['127.0.0.1']
