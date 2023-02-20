@@ -30,12 +30,12 @@ SERVER_TYPE = os.environ.get('SERVER_TYPE', 'development')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['gimme-switzerland.netlify.app']
 
 if SERVER_TYPE != 'production':
     ALLOWED_HOSTS += ['127.0.0.1']
 
-CORS_ALLOWED_ORIGINS = []
+CORS_ALLOWED_ORIGINS = ['https://gimme-switzerland.netlify.app/','http://localhost:3000']
 
 if SERVER_TYPE != 'production':
     CORS_ALLOWED_ORIGINS += ['http://localhost:3000']
