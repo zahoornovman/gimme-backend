@@ -9,7 +9,7 @@ from want_image.models import WantImage
 
 # Create your views here.
 
-
+# List all wants/Requests. no login needed
 class ListAllWantsView(ListAPIView):
     queryset = Want.objects.all()
     serializer_class = WantSerializer
@@ -28,6 +28,7 @@ class ListAllWantsView(ListAPIView):
         return objects
 
 
+# Logged in user call for list and create new wants/Requests
 class ListAndCreateWantsForLoggedInUserView(ListCreateAPIView):
     serializer_class = WantSerializer
     pagination_class = None
@@ -46,6 +47,7 @@ class ListAndCreateWantsForLoggedInUserView(ListCreateAPIView):
                                                                                                   '-created_time')
 
 
+# Update delete want/Request by logged in user
 class RetrieveUpdateDeleteWantView(RetrieveUpdateDestroyAPIView):
     queryset = Want.objects.all()
     serializer_class = WantSerializer

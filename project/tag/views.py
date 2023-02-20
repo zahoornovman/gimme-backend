@@ -5,7 +5,7 @@ from tag.models import Tag
 from tag.serializers import TagSerializer
 
 
-# Create your views here.
+# List all tags
 
 class ListTagsView(ListAPIView):
     queryset = Tag.objects.all()

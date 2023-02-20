@@ -24,19 +24,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-# 'django-insecure-*uy8-p%jflfr=!1h!qp_98+oh-hvo5yrkz+0nh-x-ik!e(x$_s'
 
 SERVER_TYPE = os.environ.get('SERVER_TYPE', 'development')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['gimme-backend.herokuapp.com']
 
 if SERVER_TYPE != 'production':
     ALLOWED_HOSTS += ['127.0.0.1']
 
-CORS_ALLOWED_ORIGINS = []
+CORS_ALLOWED_ORIGINS = ['https://gimme-switzerland.netlify.app']
 
 if SERVER_TYPE != 'production':
     CORS_ALLOWED_ORIGINS += ['http://localhost:3000']
