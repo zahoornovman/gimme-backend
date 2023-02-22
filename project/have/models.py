@@ -21,7 +21,7 @@ class Have(models.Model):
 
     author = models.ForeignKey(to=UserProfile, on_delete=models.CASCADE, related_name='haves')
     tags = models.ManyToManyField(to=Tag, related_name='haves')
-    description = models.CharField(max_length=500, blank=True)
+    description = models.CharField(max_length=1000, blank=True)
     title = models.CharField(max_length=100, blank=False)
     condition = models.IntegerField(choices=Conditions.choices, blank=False)
     status = models.IntegerField(choices=Status.choices, blank=False)
